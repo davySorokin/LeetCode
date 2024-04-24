@@ -8,8 +8,12 @@ class Solution:
                 results.append(curr_list.copy())
                 return
 
-            # Iterate through candidates starting from 'start' to avoid duplicates
+            # Iterate through candidates starting from 'start'
             for i in range(start, len(candidates)):
+                # Skip duplicate elements if the current candidate is the same as the previous one (except for the first occurrence)
+                if i > start and candidates[i] == candidates[i-1]:
+                    continue
+
                 # If candidate is greater than remaining sum, stop iterating
                 if candidates[i] > remaining:
                     break
@@ -21,5 +25,6 @@ class Solution:
                 # Backtrack: remove last element from current list
                 curr_list.pop()
 
+        candidates.sort()  # Sort candidates to group duplicates together
         backtrack()  # Start backtracking from index 0
         return results
