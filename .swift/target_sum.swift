@@ -1,20 +1,25 @@
 class Solution {
     func findTargetSumWays(_ nums: [Int], _ target: Int) -> Int {
-        let sum = nums.reduce(0, +)
-        if sum < target || (sum + target) % 2 != 0 {
-            return 0
-        }
-
-        let s = (sum + target) / 2
-        var dp = [Int](repeating: 0, count: s + 1)
-        dp[0] = 1
-
-        for num in nums {
-            for j in stride(from: s, through: num, by: -1) {
-                dp[j] += dp[j - num]
+        var memo = [String: Int]()
+        
+        func backtrack(_ index: Int, _ currentSum: Int) -> Int {
+            let key = "\(index)_\(currentSum)"
+            if let val = memo[key] {
+                return val
             }
+            if index == nums.count {
+                return currentSum == target ? 1 : 0
+            }
+            
+            // Calculate the number of ways by adding and subtracting the current number
+            let add = backtrack(index + 1, currentSum + nums[index])
+            let subtract = backtrack(index + 1, currentSum - nums[index])
+            
+            // Memoize the result
+            memo[key] = add + subtract
+            return memo[key]!
         }
-
-        return dp[s]
+        
+        return backtrack(0, 0)
     }
 }
