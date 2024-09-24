@@ -1,18 +1,19 @@
 import pandas as pd
 
 def students_and_examinations(students: pd.DataFrame, subjects: pd.DataFrame, examinations: pd.DataFrame) -> pd.DataFrame:
-    # Create the cross join between students and subjects
-    cross_join = students.assign(key=1).merge(subjects.assign(key=1), on='key').drop('key', axis=1)
+    # Count the number of times each student attended an exam for a subject
+    examination_count = examinations.groupby(['student_id', 'subject_name']).size().reset_index(name='attended_exams')
     
-    # Left join the cross join result with the examinations table to get the attendance count
-    result = cross_join.merge(examinations.groupby(['student_id', 'subject_name']).size().reset_index(name='attended_exams'),
-                              on=['student_id', 'subject_name'], how='left').fillna(0)
+    # Cross join students and subjects to get all combinations of students and subjects
+    student_subject = pd.merge(students, subjects, how='cross')
     
-    # Convert the attendance counts to integers
-    result['attended_exams'] = result['attended_exams'].astype(int)
+    # Left join with the examination_count to get the attendance data
+    result_df = pd.merge(student_subject, examination_count, on=['student_id', 'subject_name'], how='left')
     
-    # Sort by student_id and subject_name
-    result = result.sort_values(by=['student_id', 'subject_name'])
+    # Fill NaN values in 'attended_exams' with 0 (for students who didn't attend any exam for a subject)
+    result_df['attended_exams'] = result_df['attended_exams'].fillna(0).astype(int)
     
-    # Return the final result
-    return result[['student_id', 'student_name', 'subject_name', 'attended_exams']]
+    # Sort the result by 'student_id' and 'subject_name'
+    result_df = result_df[['student_id', 'student_name', 'subject_name', 'attended_exams']].sort_values(by=['student_id', 'subject_name'])
+    
+    return result_df
