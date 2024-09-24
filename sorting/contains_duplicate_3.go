@@ -1,27 +1,49 @@
-import (
-    "math"
-)
-
 func containsNearbyAlmostDuplicate(nums []int, indexDiff int, valueDiff int) bool {
-    // Use a map to simulate a sliding window of the last indexDiff elements
-    window := make(map[int]int)
+    if indexDiff <= 0 || valueDiff < 0 {
+        return false
+    }
 
-    for i := 0; i < len(nums); i++ {
-        // For every element nums[i], we search the window for nearby elements
-        for _, v := range window {
-            if math.Abs(float64(nums[i]-v)) <= float64(valueDiff) {
-                return true
-            }
+    bucketSize := valueDiff + 1
+    buckets := make(map[int]int)
+
+    for i, num := range nums {
+        bucketID := getBucketID(num, bucketSize)
+
+        // Check the current bucket
+        if _, exists := buckets[bucketID]; exists {
+            return true
         }
 
-        // Add the current element to the window
-        window[i] = nums[i]
+        // Check the neighboring buckets
+        if neighbor, exists := buckets[bucketID-1]; exists && abs(num-neighbor) <= valueDiff {
+            return true
+        }
+        if neighbor, exists := buckets[bucketID+1]; exists && abs(num-neighbor) <= valueDiff {
+            return true
+        }
 
-        // Remove the oldest element that is out of the sliding window of size indexDiff
-        if len(window) > indexDiff {
-            delete(window, i-indexDiff)
+        // Add the current number to its bucket
+        buckets[bucketID] = num
+
+        // Remove the element that is out of the `indexDiff` range
+        if i >= indexDiff {
+            delete(buckets, getBucketID(nums[i-indexDiff], bucketSize))
         }
     }
 
     return false
+}
+
+func getBucketID(num int, bucketSize int) int {
+    if num < 0 {
+        return (num+1)/bucketSize - 1
+    }
+    return num / bucketSize
+}
+
+func abs(a int) int {
+    if a < 0 {
+        return -a
+    }
+    return a
 }
