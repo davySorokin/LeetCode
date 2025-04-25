@@ -7,7 +7,7 @@
   ORDER BY COUNT(*) DESC, u.name ASC
   LIMIT 1
 )
-UNION
+UNION ALL
 (
   SELECT m.title AS results
   FROM Movies m
