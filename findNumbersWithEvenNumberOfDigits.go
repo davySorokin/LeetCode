@@ -1,9 +1,9 @@
 package main
 
-import {
+import (
   "fmt"
   "strconv"
-  }
+)
 
 func findNumbers(nums []int) int {
 	count := 0
