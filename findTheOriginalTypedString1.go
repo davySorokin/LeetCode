@@ -1,4 +1,7 @@
 func possibleStringCount(word string) int {
+    if len(word) == 0 {
+        return 0
+    }
 
     count := 1 // The word itself is one valid possibility
 
