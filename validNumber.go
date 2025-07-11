@@ -40,9 +40,26 @@ func isNumber(s string) bool {
         }
     }
 
+        // Skip trailing spaces
+    for i < n && s[i] == ' ' {
+        i++
+    }
+    
     return isNumeric && i == n
 }
 
 func isDigit(c byte) bool {
     return c >= '0' && c <= '9'
 }
+
+/*
+fmt.Println(isNumber("2"))           // true
+fmt.Println(isNumber("0089"))        // true
+fmt.Println(isNumber("-0.1"))        // true
+fmt.Println(isNumber("+3.14"))       // true
+fmt.Println(isNumber("e"))           // false
+fmt.Println(isNumber("."))           // false
+fmt.Println(isNumber("1e"))          // false
+fmt.Println(isNumber("1e10"))        // true
+fmt.Println(isNumber("95a54e53"))    // false
+*/
