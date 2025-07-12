@@ -16,9 +16,6 @@ func backtrack(nums []int, path []int, res *[][]int, used []bool) {
 		*res = append(*res, temp)
 		return
 	}
-
-	k-- // convert to 0-based index
-    	res := ""
 	
 	for i := 0; i < len(nums); i++ {
 		if used[i] || (i > 0 && nums[i] == nums[i-1] && !used[i-1]) {
