@@ -12,6 +12,9 @@ func getPermutation(n int, k int) string {
         nums = append(nums, i)
     }
 
+    k-- // convert to 0-based index
+    res := ""
+    
     for i := n; i >= 1; i-- {
         factorial /= i
         index := k / factorial
