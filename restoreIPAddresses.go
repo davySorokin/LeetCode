@@ -18,7 +18,7 @@ func restoreIpAddresses(s string) []string {
 			// Remaining part must be a valid number
 			part := s[start:]
 			if isValid(part) {
-				result = append(result, current+"."+part)
+				result = append(result, current+part)
 			}
 			return
 		}
@@ -54,11 +54,3 @@ func isValid(part string) bool {
 	}
 	return num >= 0 && num <= 255
 }
-
-/*
-func main() {
-	fmt.Println(restoreIpAddresses("25525511135"))
-	fmt.Println(restoreIpAddresses("0000"))
-	fmt.Println(restoreIpAddresses("101023"))
-}
-*/
