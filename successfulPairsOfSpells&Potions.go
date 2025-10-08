@@ -1,17 +1,22 @@
 package main
 
-func successfulPairsBrute(spells []int, potions []int, success int64) []int {
-	n := len(spells)
-	ans := make([]int, n)
+import (
+	"fmt"
+	"sort"
+)
+
+func successfulPairs(spells []int, potions []int, success int64) []int {
+	sort.Ints(potions)
+	m := len(potions)
+	res := make([]int, len(spells))
+
 	for i, s := range spells {
-		var cnt int
-		ss := int64(s)
-		for _, p := range potions {
-			if ss*int64(p) >= success {
-				cnt++
-			}
-		}
-		ans[i] = cnt
+		need := (success + int64(s) - 1) / int64(s) // ceil(success / s)
+		idx := sort.Search(m, func(k int) bool {
+			return int64(potions[k]) >= need
+		})
+		res[i] = m - idx
 	}
-	return ans
+
+	return res
 }
