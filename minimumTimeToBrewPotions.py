@@ -1,20 +1,15 @@
 class Solution:
-    def minTime(self, skill: List[int], mana: List[int]) -> int:
-        n, m = len(skill), len(mana)
-        dp = [0] * m
+    def minTime(self, skill: list[int], mana: list[int]) -> int:
+        n = len(skill)
+        f = [0] * n
 
-        for i in range(n):
-            new_dp = [0] * m
-            for j in range(m):
-                time = skill[i] * mana[j]
-                if i == 0 and j == 0:
-                    new_dp[j] = time
-                elif i == 0:
-                    new_dp[j] = new_dp[j-1] + time
-                elif j == 0:
-                    new_dp[j] = dp[j] + time
-                else:
-                    new_dp[j] = max(dp[j], new_dp[j-1]) + time
-            dp = new_dp
+        for x in mana:
+            now = f[0]
+            for i in range(1, n):
+                now = max(now + skill[i - 1] * x, f[i])
+            f[-1] = now + skill[-1] * x
+            # update f backwards
+            for i in range(n - 2, -1, -1):
+                f[i] = f[i + 1] - skill[i + 1] * x
 
-        return dp[-1]
+        return f[-1]
